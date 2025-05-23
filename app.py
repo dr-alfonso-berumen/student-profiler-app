@@ -1,23 +1,25 @@
 import streamlit as st
 import pandas as pd
-from pandas_profiling import ProfileReport
-from streamlit.components.v1 import html
+import sweetviz as sv
+import os
 
 st.set_page_config(layout="wide")
-st.title("📊 Student Data Profiler")
+st.title("📊 Student Data Profiler (Sweetviz)")
 
-uploaded_file = st.file_uploader("Upload your CSV file", type=["csv"])
+uploaded_file = st.file_uploader("Upload a CSV file", type=["csv"])
 
 if uploaded_file:
     df = pd.read_csv(uploaded_file)
     st.success("✅ File uploaded successfully!")
-    st.write("First few rows of your dataset:")
+
+    st.subheader("👀 Preview of your data:")
     st.dataframe(df.head())
 
-    st.subheader("📈 Profiling Report")
-    profile = ProfileReport(df, title="Profiling Report", explorative=True)
-    profile.to_file("report.html")
+    st.subheader("📈 Generating Sweetviz Report...")
+    report = sv.analyze(df)
+    report_path = "sweetviz_report.html"
+    report.show_html(report_path, open_browser=False)
 
-    with open("report.html", "r", encoding='utf-8') as f:
-        html_report = f.read()
-        html(html_report, height=1000, scrolling=True)
+    with open(report_path, "r", encoding="utf-8") as f:
+        html = f.read()
+        st.components.v1.html(html, height=800, scrolling=True)
