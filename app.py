@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from ydata_profiling import ProfileReport
+from pandas_profiling import ProfileReport
 from streamlit.components.v1 import html
 
 st.set_page_config(layout="wide")
